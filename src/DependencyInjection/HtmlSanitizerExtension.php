@@ -45,7 +45,12 @@ class HtmlSanitizerExtension extends Extension
         $this->registerSanitizers($container, $config['sanitizers'], $config['default_sanitizer']);
 
         if (class_exists(TextType::class)) {
-            $this->registerFormExtension($container, $config['default_sanitizer']);
+            if (isset($config['sanitizers'][$config['default_sanitizer']]['sanitize_html'])){
+                $sanitizeHtml = $config['sanitizers']['sanitize_html'];
+            } else {
+                $sanitizeHtml = false;
+            }
+            $this->registerFormExtension($container, $config['default_sanitizer'], $sanitizeHtml);
         }
 
         if (class_exists(Environment::class)) {
@@ -82,9 +87,9 @@ class HtmlSanitizerExtension extends Extension
         $registry->setArgument(0, $refMap);
     }
 
-    private function registerFormExtension(ContainerBuilder $container, string $default)
+    private function registerFormExtension(ContainerBuilder $container, string $default, bool $sanitizeHtml)
     {
-        $extension = new Definition(TextTypeExtension::class, [new Reference('html_sanitizer.registry'), $default]);
+        $extension = new Definition(TextTypeExtension::class, [new Reference('html_sanitizer.registry'), $default, $sanitizeHtml]);
         $extension->addTag('form.type_extension', ['extended_type' => TextType::class]);
 
         $container->setDefinition('html_sanitizer.form.text_type_extension', $extension);

@@ -26,11 +26,13 @@ class TextTypeExtension extends AbstractTypeExtension
 {
     private $sanitizers;
     private $default;
+    private $sanitizeHtml;
 
-    public function __construct(ContainerInterface $sanitizers, string $default)
+    public function __construct(ContainerInterface $sanitizers, string $default, bool $sanitizeHtml)
     {
         $this->sanitizers = $sanitizers;
         $this->default = $default;
+        $this->sanitizeHtml = $sanitizeHtml;
     }
 
     // needed for BC reasons
@@ -49,7 +51,7 @@ class TextTypeExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(['sanitize_html' => false, 'sanitizer' => null])
+            ->setDefaults(['sanitize_html' => $this->sanitizeHtml, 'sanitizer' => null])
             ->setAllowedTypes('sanitize_html', 'bool')
             ->setAllowedTypes('sanitizer', ['string', 'null'])
         ;
