@@ -45,7 +45,7 @@ class HtmlSanitizerExtension extends Extension
         $this->registerSanitizers($container, $config['sanitizers'], $config['default_sanitizer']);
 
         if (class_exists(TextType::class)) {
-            if (isset($config['sanitizers'][$config['default_sanitizer']]['sanitize_html'])){
+            if (isset($config['sanitizers']['sanitize_html'])){
                 $sanitizeHtml = $config['sanitizers']['sanitize_html'];
             } else {
                 $sanitizeHtml = false;
